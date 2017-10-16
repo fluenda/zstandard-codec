@@ -17,54 +17,42 @@
 
 package com.fluenda.hadoop.io.compress.zstandard;
 
-import org.apache.hadoop.io.compress.Decompressor;
+import org.apache.hadoop.io.compress.CompressorStream;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
-public class ZstandardDecompressor implements Decompressor {
-
-    @Override
-    public void setInput(byte[] bytes, int i, int i1) {
-
+public final class OutputStreamDelegatingCompressorStream extends CompressorStream {
+    public OutputStreamDelegatingCompressorStream(final OutputStream out) throws IOException {
+        super(out);
     }
 
     @Override
-    public boolean needsInput() {
-
+    public void write(final int b) throws IOException {
+        out.write(b);
     }
 
     @Override
-    public void setDictionary(byte[] bytes, int i, int i1) {
-
+    public void write(final byte[] data, final int offset, final int length) throws IOException {
+        out.write(data, offset, length);
     }
 
     @Override
-    public boolean needsDictionary() {
-
+    public void close() throws IOException {
+        flush();
+        out.close();
     }
 
     @Override
-    public boolean finished() {
-
+    public void flush() throws IOException {
+        out.flush();
     }
 
     @Override
-    public int decompress(byte[] bytes, int i, int i1) throws IOException {
-
+    public void finish() throws IOException {
     }
 
     @Override
-    public int getRemaining() {
-
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void end() {
-
+    public void resetState() throws IOException {
     }
 }
